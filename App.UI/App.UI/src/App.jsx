@@ -15,7 +15,7 @@ const App = () => {
                 <a className="nav-link active" aria-current="page" href="#">Books List</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Users</a>
+                <a className="nav-link" href="#">Requests</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">Pricing</a>
