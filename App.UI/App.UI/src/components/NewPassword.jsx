@@ -48,7 +48,7 @@ const PasswordReset = () => {
 
   return (
     <Container className="mt-5">
-      <h2>Password reset</h2>
+      <h2>New Password</h2>
       {message && <Alert variant={message.includes('success') ? 'success' : 'danger'}>{message}</Alert>}
       
       <Form onSubmit={handlePasswordReset} className="mt-4">

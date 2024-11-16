@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const authExcludeEndpoints = ['/api/auth/login','/api/auth/register','/api/auth/passwordReset', '/api/auth/clickResetPasswordLink' ]
+const authExcludeEndpoints = ['/api/auth/login','/api/auth/register','/api/auth/passwordReset', '/api/auth/newPassword' ]
 
 
 // Middleware to authenticate user via JWT

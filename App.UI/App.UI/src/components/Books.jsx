@@ -5,39 +5,30 @@ import HttpClient from '../clients/httpClient';
 const httpClient = new HttpClient();
 
 const Books = () => {
-    const [books, setBooks] = useState([
-        // { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'Fiction', condition: 'Good', availability: 'Available', ownedBy: 'John Doe' },
-        // { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', condition: 'Excellent', availability: 'Checked Out', ownedBy: 'Jane Smith' },
-        // { id: 3, title: '1984', author: 'George Orwell', genre: 'Dystopian', condition: 'Fair', availability: 'Available', ownedBy: 'Alice Johnson' },
-        // { id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', genre: 'Romance', condition: 'Good', availability: 'Available', ownedBy: 'Bob Brown' },
-    ]);   
-
-    const [users, setUsers] = useState([])
+    const [books, setBooks] = useState([]); 
 
     useEffect(() => {
         // Fetch all books
         httpClient.get('books')
             .then(response => setBooks(response.data))
-            .catch(error => console.error('Error fetching books:', error));
-
-        // fetch all users
-        httpClient.get('users')
-            .then(response => setUsers(response.data))
-            .catch(error => console.error('Error fetching users:', error));
+            .catch(error => console.error('Error fetching books:', error));       
     }, []);   
 
     const handleAddBook = (e) => {
         const newBook = e.data;
-        httpClient.post('books', newBook)
-            .then(response => {
-                setBooks([...books, response.data]);
-            })
+        httpClient.post('books', newBook)            
             .catch(error => console.error('Error adding book:', error));
     };
 
     const handleEditBook = (e) => {
-        const updatedBook = e.data;
-        httpClient.put(`books/${updatedBook._id}`, updatedBook)
+        const updatedBook ={            
+            title: e.newData?.title ?? e.oldData.title,
+            author: e.newData?.author ?? e.oldData.author,
+            condition: e.newData?.condition ?? e.oldData.condition,
+            availability: e.newData?.availability ?? e.oldData.availability,
+            owner: e.oldData?.owner,            
+        };
+        httpClient.put(`books/${e.key}`, updatedBook)
             .then(response => {
                 const updatedBooks = books.map(book => 
                     book._id === updatedBook._id ? response.data : book
@@ -55,55 +46,34 @@ const Books = () => {
                 setBooks(updatedBooks);
             })
             .catch(error => console.error('Error deleting book:', error));
-    };
-
-    const handleSearch = (searchValue) => {
-        httpClient.get(`books?search=${searchValue}`)
-            .then(response => setBooks(response.data))
-            .catch(error => console.error('Error searching books:', error));
-    };
-
-    const [searchValue, setSearchValue] = useState('');
-
-    const handleSearchChange = (e) => {
-        setSearchValue(e.target.value);
-    };
-
-
-    useEffect(() => {
-        if (searchValue) {
-            handleSearch(searchValue);
-        } else {
-            httpClient.post('books')
-                .then(response => setBooks(response.data))
-                .catch(error => console.error('Error fetching books:', error));
-        }
-    }, [searchValue]);
+    };   
 
     return (
         <div>            
             <DataGrid
                 dataSource={books}
                 keyExpr="_id"
-                onRowUpdated={handleEditBook}
+                onRowInserting={handleAddBook}
+                onRowUpdating={handleEditBook}
+                onRowRemoving={handleDeleteBook}
                 showBorders={true}
                 allowFiltering={true}
                 allowSearching={true}
                 allowSorting={true}
                 allowColumnResizing={true}
+                height={300}
+                rowAlternationEnabled={true}
             >
                 <FilterRow visible={true} />
                 <SearchPanel visible={true}/>
                 <Scrolling mode="virtual" />
                 <Editing
                     mode="popup"
+                    title={"Book Details"}
                     allowUpdating={true}
                     allowAdding={true}
                     allowDeleting={true}    
-                    useIcons={true}
-                    onRowInserting={handleAddBook}
-                    onRowUpdating={handleEditBook}
-                    onRowRemoving={handleDeleteBook}
+                    useIcons={true}                   
                 >                    
                 </Editing>
                 <Column dataField="title" caption="Title" />
@@ -111,7 +81,7 @@ const Books = () => {
                 <Column dataField="genre" caption="Genre" />
                 <Column dataField="condition" caption="Condition" />
                 <Column dataField="availability" caption="Availability" />
-                <Column allowEditing={false} allowAdding={false} dataField="ownedBy" caption="Owned By" />                  
+                <Column allowEditing={false} allowAdding={false} dataField="owner.username" caption="Owned By" />                  
             </DataGrid>
         </div>
     );

@@ -7,6 +7,7 @@ import Register from "../components/Register";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import NewPassword from "../components/NewPassword";
 import Books from "../components/Books";
+import UserProfile from "../components/UserProfile";
 
 const token = window.localStorage.getItem('token')
 
@@ -34,8 +35,9 @@ const routes = [
     { path: '/login', element: <Login /> },    
     { path: '/logout', element: <Logout /> },
     { path: '/passwordreset', element: <PasswordReset /> },
-    {path: 'newPassword', element: <NewPassword />},
-    { path: '/register', element: <Register />}    
+    { path: '/newPassword', element: <NewPassword />},
+    { path: '/register', element: <Register />},
+    { path: '/profile', element: <UserProfile />} 
   ]
 
   const router = createBrowserRouter(routes, { basename: '/' })

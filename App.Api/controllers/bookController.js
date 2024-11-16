@@ -7,7 +7,7 @@ export const addBook = async (req, res) => {
         await newBook.save();
         res.status(201).json(newBook);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -17,7 +17,7 @@ export const getBooks = async (req, res) => {
         const books = await Book.find().populate('owner', ['username', '_id']);
         res.json(books);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -33,7 +33,7 @@ export const deleteBook = async (req, res) => {
         await book.deleteOne()
         res.status(200).json({ message: 'Book deleted successfully' });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -52,7 +52,7 @@ export const editBook = async (req, res) => {
         await book.updateOne({ title, author, genre, condition, availability, owner });
         res.json(book);
     } catch (error)  {
-        return res.json(400).json({ message: error.message });
+        return res.json(500).json({ message: error.message });
     }
 }
 

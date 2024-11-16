@@ -26,10 +26,7 @@ const Home = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/requests">Requests</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/pricing">Pricing</Link>
-            </li>
+            </li>            
           </ul>
           {/* Right-aligned links for Logout and Manage Profile */}
           <ul className="navbar-nav ms-auto">
@@ -44,8 +41,8 @@ const Home = () => {
       </div>
     </nav>
       <div className="container mt-4">
-        <h1>Welcome to Book Exchange App!</h1>
-        <p>Start by donating or requesting for books.</p>
+        <h1>Books List</h1>
+        {/* <p>Start by donating or requesting for books.</p> */}
         <Books />
       </div>
     </div>

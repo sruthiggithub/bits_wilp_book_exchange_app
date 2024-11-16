@@ -6,21 +6,14 @@ export const register = async (req, res) => {
     const { username, password } = req.body;
     try {
         const newUser = new User({ username, password });
-        await newUser.save();
+        await newUser.save();     
        
-       const token = jwt.sign(
-        { userId: newUser._id, username: newUser.username },
-        process.env.JWT_SECRET,  
-        { expiresIn: '100h' }      
-    );
-
     // Send response with token
     res.status(201).json({
-        message: 'User created successfully',
-        token,  // Send the JWT token to the client
+        message: 'User created successfully'        
     });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -31,10 +24,10 @@ export const login = async (req, res) => {
         if (!user || !(await user.matchPassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10h' });
         res.json({ token });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -45,7 +38,7 @@ export const passwordReset = async (req, res) => {
     const user = await User.findOne({ username });
   
     if (!user) {
-      return res.status(400).json({ message: 'No account found with that email address.' });
+      return res.status(404).json({ message: 'No account found with that email address.' });
     }  
    
     const resetToken = crypto.randomBytes(20).toString('hex');
@@ -76,36 +69,56 @@ export const passwordReset = async (req, res) => {
     res.status(200).json({ message: 'Password reset email sent.' });
   };
   
-  // Placeholder reset password page (you can use React for this)
-  export const clickResetPasswordLink = async(req, res) => {
-    const token = req.params.token;
-  
-    // Find user with the matching token
-    const user = await User.find((user) => user.resetToken === token);
-  
-    if (!user || user.resetTokenExpiration < Date.now()) {
-      return res.status(400).send('Invalid or expired reset token.');
+  export const newPassword = async (req, res) => {
+    const { username, newPassword } = req.body;
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      user.password = newPassword;
+      await user.save();
+      res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-  
-    // Here you could render a form to reset the password or return a message
-    res.send('Password reset form (implement this as needed)');
   };
+
+  // // Placeholder reset password page (you can use React for this)
+  // export const clickResetPasswordLink = async(req, res) => {
+  //   const token = req.params.token;
+  
+  //   // Find user with the matching token
+  //   const user = await User.find((user) => user.resetToken === token);
+  
+  //   if (!user || user.resetTokenExpiration < Date.now()) {
+  //     return res.status(400).send('Invalid or expired reset token.');
+  //   }
+  
+  //   // Here you could render a form to reset the password or return a message
+  //   res.send('Password reset form (implement this as needed)');
+  // };
   
 
   export const manageProfile = async (req, res) => {
-    const { userId, username, email, phoneNumber } = req.body;
+    const { username, phoneNumber,name, favoriteGenres,booksWishList  } = req.body;
     try {
-        const user = await User.findById(userId);
+
+        const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         user.username = username || user.username;
-        user.email = email || user.email;
+        user.name = name || user.name;
         user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.favoriteGenres = favoriteGenres || user.favoriteGenres;
+        user.booksWishList = booksWishList || user.booksWishList;
+
         await user.save();
         res.status(200).json({ message: 'Profile updated successfully', user });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
