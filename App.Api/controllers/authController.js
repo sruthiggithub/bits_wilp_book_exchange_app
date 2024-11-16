@@ -11,7 +11,7 @@ export const register = async (req, res) => {
        const token = jwt.sign(
         { userId: newUser._id, username: newUser.username },
         process.env.JWT_SECRET,  
-        { expiresIn: '10h' }      
+        { expiresIn: '100h' }      
     );
 
     // Send response with token
@@ -59,10 +59,10 @@ export const passwordReset = async (req, res) => {
     // Create reset URL (replace with your actual domain)
     const resetUrl = `http://localhost:${process.env.PORT}/reset-password/${resetToken}`;
   
-    // Send email using Nodemailer
+    // Password reset email content
     const mailOptions = {
       from: 'your-email@gmail.com',
-      to: email,
+      to: username,
       subject: 'Password Reset Request',
       html: `
         <h3>Password Reset Request</h3>
@@ -72,14 +72,8 @@ export const passwordReset = async (req, res) => {
       `,
     };
   
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ message: 'Failed to send reset email.' });
-      }
-      res.status(200).json({ message: 'Password reset email sent.' });
-    });
+    // Mock password reset mail
+    res.status(200).json({ message: 'Password reset email sent.' });
   };
   
   // Placeholder reset password page (you can use React for this)

@@ -1,13 +1,12 @@
 import React, { memo } from "react";
 import Home from "../components/Home";
-import AccessDenied from "../components/AcessDenied"
 import Login from "../components/Login";
 import Logout from "../components/Logout";
 import PasswordReset from "../components/PasswordReset";
 import Register from "../components/Register";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import { ElementType } from "devextreme-react/cjs/core/configuration/react/element";
-import BooksDataGrid from "../components/BooksTable";
+import NewPassword from "../components/NewPassword";
+import Books from "../components/Books";
 
 const token = window.localStorage.getItem('token')
 
@@ -31,10 +30,11 @@ const routes = [
       )
     },   
     { path: '/home', element: <Home /> }, 
-    { path : '/books', element: <BooksDataGrid /> },
+    { path : '/books', element: <Books /> },
     { path: '/login', element: <Login /> },    
     { path: '/logout', element: <Logout /> },
     { path: '/passwordreset', element: <PasswordReset /> },
+    {path: 'newPassword', element: <NewPassword />},
     { path: '/register', element: <Register />}    
   ]
 

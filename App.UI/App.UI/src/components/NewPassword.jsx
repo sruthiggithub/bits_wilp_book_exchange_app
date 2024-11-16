@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Button, Form, Container, Alert } from 'react-bootstrap'; // Import Bootstrap components
 import HttpClient from '../clients/httpClient';
+import { useNavigate } from 'react-router-dom';
 
 const httpClient = new HttpClient();
 
@@ -10,7 +11,9 @@ const PasswordReset = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const [email, setEmail] = useState('')
+  const navigate = useNavigate();
+  
   const handlePasswordReset = async (e) => {
     e.preventDefault();
 
@@ -33,7 +36,8 @@ const PasswordReset = () => {
           });
     
           setLoading(false);
-          setSuccessMessage(response.data.message || 'Password reset email sent. Please check your inbox.');
+
+          setMessage(response.data.message || 'Password reset email sent. Please check your inbox.');
     
           navigate('/login')
     } catch {
@@ -48,6 +52,18 @@ const PasswordReset = () => {
       {message && <Alert variant={message.includes('success') ? 'success' : 'danger'}>{message}</Alert>}
       
       <Form onSubmit={handlePasswordReset} className="mt-4">
+      <Form.Group controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Group controlId="formEmail">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
+        </Form.Group>
         <Form.Group controlId="password">
           <Form.Label>New Password</Form.Label>
           <Form.Control

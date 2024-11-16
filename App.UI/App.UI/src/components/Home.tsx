@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import BooksDataGrid from './BooksTable';
 import { Button } from 'react-bootstrap';
+import Books from './Books';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Home = () => {
       <div className="container mt-4">
         <h1>Welcome to Book Exchange App!</h1>
         <p>Start by donating or requesting for books.</p>
-        <BooksDataGrid />
+        <Books />
       </div>
     </div>
   );

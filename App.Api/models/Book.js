@@ -6,7 +6,7 @@ const bookSchema = new mongoose.Schema({
     genre: { type: String, required: true },
     condition: { type: String, required: true },
     availability: { type: Boolean, default: true },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Book = mongoose.model('Book', bookSchema);
