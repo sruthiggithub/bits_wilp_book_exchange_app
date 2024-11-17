@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 const userSchema = new mongoose.Schema({    
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    phoneNumber: {type: String, required: true},
+    phoneNumber: {type: String, required: false},
     name: {type: String, required: false },        
     favoriteGenres: {type: String, required: false, default: 'fiction', values: ['fiction', 'non-fiction', 'both']},    
     booksWishList: {type: String, required: false}, 

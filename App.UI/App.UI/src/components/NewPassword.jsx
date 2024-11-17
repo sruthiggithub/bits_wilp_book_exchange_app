@@ -31,15 +31,18 @@ const PasswordReset = () => {
     setLoading(true);
    
     try {
-        const response = await httpClient.post('auth/resetPassword', {
-            username: email
+        const response = await httpClient.post('auth/newPassword', {
+            username: email,
+            newPassword: password
           });
     
           setLoading(false);
 
           setMessage(response.data.message || 'Password reset email sent. Please check your inbox.');
     
-          navigate('/login')
+          setTimeout(() => {            
+            navigate('/login')
+          }, 1000)
     } catch {
       setLoading(false);
       setMessage('An error occurred. Please try again.');
@@ -52,8 +55,7 @@ const PasswordReset = () => {
       {message && <Alert variant={message.includes('success') ? 'success' : 'danger'}>{message}</Alert>}
       
       <Form onSubmit={handlePasswordReset} className="mt-4">
-      <Form.Group controlId="email">
-          <Form.Label>Email</Form.Label>
+      <Form.Group controlId="email">         
           <Form.Group controlId="formEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control

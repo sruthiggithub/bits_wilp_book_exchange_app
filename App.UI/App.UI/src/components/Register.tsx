@@ -28,13 +28,18 @@ const Register: React.FC = () => {
       const response = await httpClient.post('auth/register', {
         username: email,
         password
-      });
+      }).then((response) => {
+         
+          alert('User registered successfully');
+
+          setTimeout(() => {            
+            navigate('/login')
+          }, 1000)
+       }
+      );
 
       setLoading(false);
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token); // Save token
-        navigate('/'); // Redirect to homepage after successful registration
-      }
+
     } catch (err) {
       setLoading(false);
       setError('Registration failed! Please try again.');

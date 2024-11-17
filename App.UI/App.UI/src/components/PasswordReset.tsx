@@ -24,7 +24,9 @@ const PasswordReset: React.FC = () => {
       setLoading(false);
       setSuccessMessage(response.data.message || 'Password reset email sent. Please check your inbox.');
 
-      navigate('/login')
+      setTimeout(() => {            
+        navigate('/login')
+      }, 1000)
     } catch (err) {
       setLoading(false);
       setError('An error occurred! Please try again.');

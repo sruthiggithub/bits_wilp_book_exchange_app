@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from 'react';
-import { DataGrid, Column, Editing, SearchPanel, Scrolling, FilterRow } from 'devextreme-react/data-grid';
+import { DataGrid, Column, Editing, SearchPanel, Scrolling, FilterRow, Paging, Pager } from 'devextreme-react/data-grid';
 import HttpClient from '../clients/httpClient';
 
 const httpClient = new HttpClient();
@@ -61,7 +61,7 @@ const Books = () => {
                 allowSearching={true}
                 allowSorting={true}
                 allowColumnResizing={true}
-                height={300}
+                height={200}
                 rowAlternationEnabled={true}
             >
                 <FilterRow visible={true} />
@@ -76,6 +76,8 @@ const Books = () => {
                     useIcons={true}                   
                 >                    
                 </Editing>
+                <Paging enabled={true} pageSize={4} />
+                <Pager visible={true} showPageSizeSelector={true} allowedPageSizes={[4, 8, 20]} showInfo={true} />
                 <Column dataField="title" caption="Title" />
                 <Column dataField="author" caption="Author" />
                 <Column dataField="genre" caption="Genre" />

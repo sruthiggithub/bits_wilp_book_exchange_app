@@ -31,6 +31,26 @@ export const login = async (req, res) => {
     }
 };
 
+export const getUser =  async (req, res) => { 
+  try {
+     const user = await User.findById(req.user.id);
+
+      if (!user) {
+          return res.status(401).json({ message: 'User not found' });
+      }
+      
+      res.json({ 
+        name: user.name, 
+        username: user.username, 
+        phoneNumber: user.phoneNumber || '', 
+        favoriteGenres: user.favoriteGenres, 
+        booksWishList: user.booksWishList 
+      });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+}
+
 export const passwordReset = async (req, res) => {
     const { username } = req.body;
   
@@ -82,34 +102,17 @@ export const passwordReset = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  };
-
-  // // Placeholder reset password page (you can use React for this)
-  // export const clickResetPasswordLink = async(req, res) => {
-  //   const token = req.params.token;
-  
-  //   // Find user with the matching token
-  //   const user = await User.find((user) => user.resetToken === token);
-  
-  //   if (!user || user.resetTokenExpiration < Date.now()) {
-  //     return res.status(400).send('Invalid or expired reset token.');
-  //   }
-  
-  //   // Here you could render a form to reset the password or return a message
-  //   res.send('Password reset form (implement this as needed)');
-  // };
-  
+  };  
 
   export const manageProfile = async (req, res) => {
-    const { username, phoneNumber,name, favoriteGenres,booksWishList  } = req.body;
+    const { phoneNumber,name, favoriteGenres,booksWishList  } = req.body;
     try {
 
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        user.username = username || user.username;
+        
         user.name = name || user.name;
         user.phoneNumber = phoneNumber || user.phoneNumber;
         user.favoriteGenres = favoriteGenres || user.favoriteGenres;

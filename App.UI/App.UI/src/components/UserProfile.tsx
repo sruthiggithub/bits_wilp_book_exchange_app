@@ -1,19 +1,29 @@
 import { useState, useEffect, memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
+import HttpClient from '../clients/httpClient';
+import React from 'react';
+
+const httpClient = new HttpClient();
 
 const UserProfile = () => {
   const [profile, setProfile] = useState({
-    readingPreferences: '',
+    phoneNumber: '',
+    name: '',
     favoriteGenres: '',
-    booksOwned: '',
-    booksWished: ''
+    booksWishList: ''
   });
-
+  const navigate = useNavigate();
+ 
   useEffect(() => {
     // Fetch user profile data
-    axios.get('/api/user')
-      .then(response => setProfile(response.data))
+    httpClient.get('auth/user')
+      .then(response => setProfile({ 
+        phoneNumber: response.data?.phoneNumber,
+        name: response.data?.name,
+        favoriteGenres: response.data?.favoriteGenres,
+        booksWishList: response.data?.booksWishList           
+    }))
       .catch(error => console.error('Error fetching profile:', error));
   }, []);
 
@@ -25,8 +35,12 @@ const UserProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Update user profile data
-    axios.put('manageProfile', profile)
-      .then(response => console.log('Profile updated:', response.data))
+    httpClient.put('auth/manageProfile', profile)
+      .then(response => {
+        console.log('Profile updated:', response.data)
+        alert('Profile updated successfully') 
+        navigate('/home')
+      })
       .catch(error => console.error('Error updating profile:', error));
   };
 
@@ -61,45 +75,31 @@ const UserProfile = () => {
           </Col>
         </Row>
         <Row className="mt-3">
-          <Col md={6}>
-            <Form.Group controlId="formReadingPreferences">
-              <Form.Label>Reading Preferences</Form.Label>
-              <Form.Control
-                type="text"
-                name="readingPreferences"
-                value={profile.readingPreferences}
-                onChange={handleChange}
-                placeholder="Enter your reading preferences"
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="formBooksWished">
-              <Form.Label>Books Wished</Form.Label>
-              <Form.Control
-                type="text"
-                name="booksWished"
-                value={profile.booksWished}
-                onChange={handleChange}
-                placeholder="Enter books you wish to acquire"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="mt-3">
-          <Col md={6}>
+        <Col md={6}>
             <Form.Group controlId="formPhone">
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 type="text"
-                name="phone"
+                name="phoneNumber"
                 value={profile.phoneNumber}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
               />
             </Form.Group>
-          </Col>          
-        </Row>
+          </Col> 
+          <Col md={6}>
+            <Form.Group controlId="formbooksWishList">
+              <Form.Label>Books Wishes</Form.Label>
+              <Form.Control
+                type="text"
+                name="booksWishList"
+                value={profile.booksWishList}
+                onChange={handleChange}
+                placeholder="Enter books you wish to acquire"
+              />
+            </Form.Group>
+          </Col>
+        </Row>       
         <Button variant="primary" type="submit" className="mt-3">
           Update Profile
         </Button>
